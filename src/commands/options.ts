@@ -18,6 +18,7 @@ const ajvOptions: SchemaMap = {
   data: {type: "boolean"},
   allErrors: {type: "boolean"},
   verbose: {type: "boolean"},
+  discriminator: {type: "boolean"},
   comment: {type: "boolean"},
   inlineRefs: boolOrNat,
   loopRequired: {type: "integer"},

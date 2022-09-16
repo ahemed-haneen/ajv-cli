@@ -218,6 +218,7 @@ You can pass the following [Ajv options](https://ajv.js.org/options.html):
 | `--data`| use [$data references](https://ajv.js.org/guide/combining-schemas.html#data-reference) |
 | `--all-errors`| collect all validation errors |
 | `--verbose` | include schema and data in errors |
+| `--discriminator` | accept schemas with discriminators defined |
 | `--comment` | log schema `$comment`s |
 | `--inline-refs=` | referenced schemas compilation mode (true/false/\<number\>) |
 | Modify validated data |

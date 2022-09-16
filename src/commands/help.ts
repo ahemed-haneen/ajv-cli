@@ -208,6 +208,8 @@ Ajv options (see https://github.com/epoberezkin/ajv#options):
 
     --verbose          include schema and data in errors
 
+    --discriminator    accept schemas with discriminators defined
+
     --comment          log schema "$comment"s
 
     --inline-refs=     referenced schemas compilation mode
