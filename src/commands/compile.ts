@@ -32,25 +32,43 @@ function execute(argv: ParsedArgs): boolean {
   return schemaFiles.map(compileSchemaAndSave).every((x) => x)
 
   function compileMultiExportModule(files: string[]): boolean {
-    const validators = files.map(compileSchema)
-    if (validators.every((v) => v)) {
-      return saveStandaloneCode(getRefs(validators as AnyValidateFunction[], files))
+    const schemas = files.map(addSchema)
+    if (schemas.every((s) => s)) {
+      const validators = files.map(compileSchema)
+      if (validators.every((v) => v)) {
+        return saveStandaloneCode(getRefs(validators as AnyValidateFunction[], files))
+      }
     }
     console.error("module not saved")
     return false
   }
 
   function compileSchemaAndSave(file: string): boolean {
-    const validate = compileSchema(file)
-    if (validate) return "o" in argv ? saveStandaloneCode(validate) : true
+    const schema = addSchema(file)
+    if (schema) {
+      const validate = compileSchema(file)
+      if (validate) return "o" in argv ? saveStandaloneCode(validate) : true
+    }
     return false
+  }
+
+  function addSchema(file: string): boolean | undefined {
+    const sch = openFile(file, `schema ${file}`)
+    try {
+      const id = sch?.$id
+      ajv.addSchema(sch, id ? undefined : file)
+      return true
+    } catch (err) {
+      console.error(`schema ${file} is invalid`)
+      console.error(`error: ${(err as Error).message}`)
+      return undefined
+    }
   }
 
   function compileSchema(file: string): AnyValidateFunction | undefined {
     const sch = openFile(file, `schema ${file}`)
     try {
       const id = sch?.$id
-      ajv.addSchema(sch, id ? undefined : file)
       const validate = ajv.getSchema(id || file)
       if (argv.o !== true) console.log(`schema ${file} is valid`)
       return validate
